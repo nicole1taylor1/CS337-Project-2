@@ -1,0 +1,5 @@
+beautifulsoup4==4.12.2
+regex==2023.10.3
+setuptools==68.0.0
+soupsieve==2.5
+wheel==0.41.2
