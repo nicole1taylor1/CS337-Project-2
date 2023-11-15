@@ -14,10 +14,6 @@ class Ingredient:
             assert not var.isspace(), "Field cannot be whitespace"
 
     def __init__(self, ingredient_name, quantity, unit, descriptor=None, preparation=None):
-        #check the inputs are of the correct type
-        for var, typ in zip([ingredient_name, quantity, unit,descriptor, preparation],
-                            [str, (int, float), str, (None, str), (None, str)]):
-            self.__checktype__(var, typ)
         
         #set fields
         self.ingredient_name = ingredient_name
@@ -26,6 +22,13 @@ class Ingredient:
         self.description = descriptor 
         self.preparation = preparation
     
+    def __str__(self):
+        #probs need to adjust plurals
+        if self.quantity != 1 and self.unit[-1] != "s":
+            return f"{self.quantity} {self.unit}s of {self.ingredient_name}\n"
+        else:
+            return f"{self.quantity} {self.unit} of {self.ingredient_name}\n"
+
     
 
 
