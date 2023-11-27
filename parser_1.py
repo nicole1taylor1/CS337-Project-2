@@ -2,24 +2,12 @@ from bs4 import BeautifulSoup
 import requests
 import unicodedata
 from ourtypes.ingredient import Ingredient
+import foodlists
 
 """
 Common keywords useful for parsing
 """
-units = {"teaspoon": ["t", "tsp"],
-"tablespoon": ["T", "tbl", "tbs", "tbsp"],
-"ounce": ["oz", "ozs", "ounce"], 
-"cup":["c", "C"],
-"pint": ["p", "P", "pt"], 
-"quart": ["q", "Q", "qt"],
-"gallon": ["g", "G", "gal"],
-"pound": ["lb"],
-"pinch": [], "pinches": [], "sprinkle": [], "dash": [], "dashes": [], "packet": [], "bag":[], "bottle":[], "jar":[], "drop":[], 
-"splash":[], "splashes":[], "bar":[], "boxes":[], "bunches":[], 
-"head":[], "envelope":[], "box":[], "jar":[], "bunch":[], "slice": [], "link": [], "bulb":[], "stalk":[], "square":[], "sprig":[],
-"fillet":[], "piece":[], "leg":[], "thigh":[], "breast":[], "cube":[], "granule":[], "strip":[], 
-"leaf":[], "loave": [], "half":[], "leaves":[], "loaves":[], "halves":[], "pack":[], "packages":[]
-}
+
 
 def read_recipe_from_url(url):
     """Will read a recipe from url using requests
@@ -58,11 +46,11 @@ def get_ingredients_from_soup(soup):
             potential_unit = text[2].lower().replace(".","")
             posn += 1
         #check for units
-        for key in units.keys():
+        for key in foodlists.units.keys():
             plural, potential_unit, end = PluralUnit(potential_unit)
             if potential_unit == key:
                 unit += potential_unit + end
-            elif potential_unit in units[key]:
+            elif potential_unit in foodlists.units[key]:
                 unit += key + end
         if unit == "":
             unit=None
@@ -82,3 +70,5 @@ def get_ingredients_from_soup(soup):
 #run program
 soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
 ingredients = get_ingredients_from_soup(soup)
+for i in ingredients:
+    print(i)

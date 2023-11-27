@@ -21,13 +21,22 @@ class Ingredient:
         self.unit = unit
         self.description = descriptor 
         self.preparation = preparation
+
+    def prep_ingredient_name(self):
+        name = self.ingredient_name
+        if self.preparation is not None:
+            name = self.preparation + " " + name
+        if self.description is not None:
+            name = self.description + " " + name
+        return name
     
     def __str__(self):
         #probs need to adjust plurals
+        name = self.prep_ingredient_name()
         if self.quantity != 1 and self.unit[-1] != "s":
-            return f"{self.quantity} {self.unit}s of {self.ingredient_name}\n"
+            return f"{self.quantity} {self.unit}s of {name}\n"
         else:
-            return f"{self.quantity} {self.unit} of {self.ingredient_name}\n"
+            return f"{self.quantity} {self.unit} of {name}\n"
 
     
 
