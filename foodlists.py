@@ -144,7 +144,7 @@ preparations = ['baked', 'beaten', 'blanched', 'boiled', 'boiling', 'boned', 'br
 		'chopped', 'cleaned',  'cooked',  'cooled', 'cored', 'creamed',  'crumbled',
 		'crushed', 'cubed', 'cut', 'deboned', 'deseeded', 'diced', 'dissolved', 'divided', 'drained', 'dried', 
 		 'grated', 'grilled', 'ground', 'halved', 'heated',  'juiced', 'julienned',  'marinated',
-		'mashed',  'melted', 'minced',  'opened',  'peeled', 'pitted', 'popped',
+		'mashed',  'melted', 'minced',  'opened',  "lengthwise", 'peeled', 'pitted', 'popped',
 		'pounded', 'prepared', 'pressed', 'pureed', 'quartered', 'refrigerated', 'rinsed',  'roasted',
 		'roasted', 'rolled',  'scalded', 'scrubbed', 'seasoned', 'seeded', 'segmented', 'separated',
 		'shredded', 'sifted',  'sliced', 'slivered',  'soaked',  'softened',
@@ -153,9 +153,9 @@ preparations = ['baked', 'beaten', 'blanched', 'boiled', 'boiling', 'boned', 'br
 		'skinned', 'gutted', 'browned', 'patted', 'flaked', 'deveined', 'shelled', 'shucked', 
 		'halves', 'squares', 'zest', 'peel', 'uncooked', 'butterflied', 'unwrapped', 'unbaked', 'warmed']
 descriptions = [
-    "all-purpose", 'coarse', 'cold', 'cool', 'crisp', 'fine', 'firm', 'fluid', 'fresh', 'frozen', 'dry', 'hard', 'hardened', 'heavy',
-    'jumbo', 'large', 'lean', 'light', 'lukewarm', 'medium', 'mini', 'near', 'optional', 'packed','ripe', 'rough', 'skinless',
-    'small','slight', 'soft','stiff', 'strong','thick', 'thin','warm','weak', 'raw', 'crumbs'
+    "all-purpose", 'coarse', 'cold', 'cool', 'crisp', "candied", 'fine', 'firm', 'fluid', 'fresh', 'frozen', 'dry', 'hard', 'hardened', 'heavy',
+    'jumbo', 'large', 'lean', 'light', 'lukewarm', 'medium', 'mini', 'near', 'optional', 'packed','ripe', 'rough', "salted", 'skinless',
+    'small','slight', 'soft','stiff', 'strong','thick', 'thin','warm','weak', 'raw', 'crumbs', "plain", "spicy", "unslated"
 ]
 
 precedingAdverbs = ['well', 'very', 'super']
