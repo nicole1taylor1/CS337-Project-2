@@ -16,14 +16,20 @@ class Ingredient:
         if type == str:
             assert not var.isspace(), "Field cannot be whitespace"
 
-    def __init__(self, ingredient_name, quantity, unit, descriptor, preparation):
+    def __init__(self, ingredient_name, quantity, unit, quantity_unicode, descriptor, preparation, unit_qualifier, tags):
         
         #set fields
         self.ingredient_name = ingredient_name
         self.quantity = quantity
         self.unit = unit
+        self.quantity_unicode = quantity_unicode
         self.description = descriptor
         self.preparation = preparation
+        self.tags = tags
+        if unit_qualifier != None:
+            self.unit_qualifier = unit_qualifier
+        else:
+            self.unit_qualifier = ""
 
     def get_preparation(self):
         match len(self.preparation):
@@ -61,13 +67,11 @@ class Ingredient:
         #probs need to adjust plurals
         name = self.format_ingredient_name()
         if self.quantity != 1 and self.unit[-1] != "s":
-            return f"{self.quantity} {self.unit}s of {name}\n"
+            return f"{self.quantity_unicode} {self.unit}s of {name}{self.unit_qualifier}\n"
         elif self.unit != None:
-            return f"{self.quantity} {self.unit} of {name}\n"
+            return f"{self.quantity_unicode} {self.unit} of {name}{self.unit_qualifier}\n"
         else:
-            return f"{self.quantity} {name}\n"
-
-    
+            return f"{self.quantity_unicode} {name}{self.unit_qualifier}\n"
 
 
         

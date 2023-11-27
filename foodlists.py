@@ -41,7 +41,7 @@ allIngredients = {
                 'calzones', 'carrots', 'cauliflower', 'celery', 'chilis', 'chives', 'choy', 'cilantro', 'coleslaw', 
                 'coriander', 'cucumber', 'cucumbers', 'dates', 'eggplant', 'eggplants', 'endive', 'escarole', 
                 'galangal', 'haystacks', 'jicama', 'kale', 'kohlrabi', 'kucai', 'leeks', 'lettuce', 
-                'mushrooms', 'okra', 'olives', 'onions', 'parsley', 'parsnips', 'peas', 'peppers', 'pickles', 
+                'mushrooms', 'okra', 'olives', 'onions', 'onion', 'parsley', 'parsnips', 'peas', 'peppers', 'pickles', 
                 'pizzas', 'potatoes', 'pumpkins', 'radishes', 'rutabagas', 'salad', 'sauerkraut', 'shallots', 'slaws', 
                 'spinach', 'sprouts', 'squash', 'tamarind', 'taros', 'tomatillo', 'tomatillos', 'tomatoes', 'turnips', 
                 'vegetable', 'vegetables', 'veggies', 'watercress', 'yams', 'zucchinis', 'chervil', 'daikon', 'iceberg',
@@ -173,6 +173,8 @@ unnecessaryDescriptions = ['chunks', 'pieces', 'rings', 'spears']
 # list of prefixes and suffixes that should be hyphenated
 hypenatedPrefixes = ['non', 'reduced', 'semi', 'low']
 hypenatedSuffixes = ['coated', 'free', 'flavored']
+
+unit_qualifiers = ["or to taste", "or as needed"]
 
 #units dictionary (our own)
 units = {"teaspoon": ["t", "tsp"],
