@@ -3,11 +3,32 @@ import requests
 import unicodedata
 from ourtypes.ingredient import Ingredient
 import foodlists
+import re
 
-"""
-Common keywords useful for parsing
-"""
+def check_url(url):
+    """Checks validity of recipe given by user
+    recipe should look like
+    https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/
+    """
+    urlList = url.split("//")
+    if urlList[0] != "https:":
+        return 1, "Please type the url as: https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/"
+    address = urlList[1].split("/")
+    if urlList[0] != "www.allrecipes.com":
+        return 1, "Hmmm... It doesn't seem like this is from AllRecipes\n \
+            Please try typing it again or if you need inspo check here https://www.allrecipes.com/ \n"
+    if (urlList[1] != "recipe"):
+        return 1, "This doesn't appear to be a valid recipe from AllRecipes\n \
+            The url should follow the format: https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/"
+    if not urlList[2].isnumeric():
+        return 1, "The recipe ID should consist only of digits.\n \
+            The url should follow the format: https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/"
+    #valid url!
+    return 0, urlList[3]
 
+
+    
+    
 
 def read_recipe_from_url(url):
     """Will read a recipe from url using requests
