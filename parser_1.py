@@ -135,9 +135,9 @@ def get_ingredients_from_soup(soup):
 
 
 #run program
-soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
+"""soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
 ingredients = get_ingredients_from_soup(soup)
 for i in ingredients:
     print(i)
     print(i.tags)
-    print("\n\n")
+    print("\n\n")"""

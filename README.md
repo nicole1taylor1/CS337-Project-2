@@ -8,3 +8,5 @@ todo
 frontend
 - give potential top recipes (cache these?)
 - help them find a recipe?
+
+streamlit lets you display videos!! (questions)
