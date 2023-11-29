@@ -12,35 +12,43 @@ def check_url(url):
     """
     urlList = url.split("//")
     if urlList[0] != "https:":
-        return 1, "Invalid URL"
+        return 1, ""
     
     #check for valid all recipe
     address = urlList[1].split("/")
     if len(address) < 4:
-        return 1, "Invalid URL"
+        return 1, ""
     if address[0] != "www.allrecipes.com":
-        return 1, "Invalid URL"
+        return 1, ""
     if address[1] != "recipe":
-        return 1, "Invalid URL"
+        return 1, ""
     if not address[2].isnumeric():
-        return 1, "Invalid URL"
+        return 1, ""
     
     #valid url!
     recipe_name = " ".join([word.capitalize() for word in address[3].split("-")])
     return 0, recipe_name
 
-
-    
-    
+def check_page_found(soup):
+    found = soup.find("div", {"id":"not-found-content_1-0"})
+    if found:
+        return 1
+    return 0
 
 def read_recipe_from_url(url):
     """Will read a recipe from url using requests
     returns bs4 soup object
     """
-
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, "html.parser")
-    return soup
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, "html.parser")
+    except:
+        return 1, None
+    
+    exitcode = check_page_found(soup)
+    if exitcode == 1:
+        return 1, None
+    return 0, soup
 
 def PluralUnit(word):
     if word[-1] == "s":
