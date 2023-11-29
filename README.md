@@ -19,5 +19,17 @@ frontend
 streamlit lets you display videos!! (questions)
 
 TODO NEXT
-- update sidebar with info
 - enable ingredient list feature
+
+CHATBOT INPUTS
+#option 2: Go over recipe 
+
+    #option 3: question about ingredient
+
+    #option 4: question about step 
+
+    #option 5: backward/forward navigation
+
+    #farenheit vs. celsuis 
+    #converting units
+    #doubling recipes, etc. 

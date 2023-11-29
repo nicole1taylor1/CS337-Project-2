@@ -13,9 +13,19 @@ def assistant_respond(assistant_response):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
+        
+        #handle new lines
+        if "\n" in assistant_response:
+            chars = []
+            chunks = assistant_response.split("\n")
+            for chunk in chunks:
+                chars += chunk.split()
+                chars.append("  \n")
+        else:
+            chars = assistant_response.split()
 
         # Simulate stream of response with milliseconds delay
-        for chunk in assistant_response.split():
+        for chunk in chars:
             full_response += chunk + " "
             time.sleep(0.05)
             # Add a blinking cursor to simulate typing
@@ -84,7 +94,15 @@ st.divider()
 
 ##########################CHAT#################################
 ###############################################################
+
 if soup:
+    #get ingredients from recipe link
+    ingredients = parser_1.get_ingredients_from_soup(soup)
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
     # Accept user input
     if prompt := st.chat_input("How can I help you?"):
         # Add user message to chat history
@@ -95,23 +113,8 @@ if soup:
 
         #NEED LOGIC HERE FOR UNDERSTAND USER QUESTIONS AND COMMANDS!!!
 
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            message_placeholder = st.empty()
-            full_response = ""
-            assistant_response = random.choice(
-                [
-                    "Hello there! How can I assist you today?",
-                    "Hi, human! Is there anything I can help you with?",
-                    "Do you need help?",
-                ]
-            )
-            # Simulate stream of response with milliseconds delay
-            for chunk in assistant_response.split():
-                full_response += chunk + " "
-                time.sleep(0.05)
-                # Add a blinking cursor to simulate typing
-                message_placeholder.markdown(full_response + "▌")
-            message_placeholder.markdown(full_response)
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        #option 1: List Ingredients
+        input = prompt.lower()
+        if "list" in input and "ingredient" in input:
+            response = "\n".join([str(ingedient) for ingedient in ingredients])
+            assistant_respond(response)
