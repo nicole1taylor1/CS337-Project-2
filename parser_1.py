@@ -3,6 +3,7 @@ import requests
 import unicodedata
 from ourtypes.ingredient import Ingredient
 import foodlists
+from create_steps import find_steps
 
 """
 Common keywords useful for parsing
@@ -116,6 +117,7 @@ def get_ingredients_from_soup(soup):
 #run program
 soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
 ingredients = get_ingredients_from_soup(soup)
+steps = find_steps(soup, [ingredient.ingredient_name for ingredient in ingredients])
 for i in ingredients:
     print(i)
     print(i.tags)
