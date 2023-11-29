@@ -23,16 +23,56 @@ def assistant_respond(assistant_response):
         message_placeholder.markdown(full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-#add All Recipes logo
+##########################TITLE################################
+###############################################################
+
 col1, col2 = st.columns([0.12,0.88])
 with col1:
+    #add All Recipes logo
     st.image('allrecipeslogo.jpeg')
 with col2:
     st.title("AllRecipes Sous Chef")
-    #st.markdown("<h1 style='text-align: center; color: red;'>Some title</h1>", unsafe_allow_html=True)
 
-st.write("Welcome to the AllRecipes Sous Chef.")
-st.write("Type the url of the recipe you'd assistance with below.")
+##########################GET RECIPE URL#######################
+###############################################################
+#get URL for recipe
+url = st.text_input(label=":gray[Please type URL below]")
+if url:
+    code, message = parser_1.check_url(url)
+    match code:
+        case 1:
+            #invalid URL
+            st.error(message)
+        case 0:
+            #valid URL, display title
+            random_response = random.choice(
+            [
+                "Yum!", "That sounds good!", 
+                "That's my favorite recipe!", "Save some for me please!",
+                "Great choice!", "Delish!", "I ❤️ that!"
+            ]
+            )
+            response = f":gray[{message} ... {random_response}]"
+            st.write(response)
+
+##########################SIDEBAR##############################
+###############################################################
+with st.sidebar:
+    st.title("The Sous Chef")
+    st.markdown('''
+    ### About Me :male-cook:
+    I'm designed to parse recipes from [AllRecipes](http://allrecipes.com/).  
+    I can help you by
+    - Listing ingredients
+    - Stepping through the recipe
+    
+    ### Getting Started
+    
+    '''
+    )
+
+##########################CHAT#################################
+###############################################################
 
 # Initialize chat history
 if "messages" not in st.session_state:

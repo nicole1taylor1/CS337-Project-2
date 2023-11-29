@@ -12,19 +12,22 @@ def check_url(url):
     """
     urlList = url.split("//")
     if urlList[0] != "https:":
-        return 1, "Please type the url as: https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/"
+        return 1, "Invalid URL"
+    
+    #check for valid all recipe
     address = urlList[1].split("/")
-    if urlList[0] != "www.allrecipes.com":
-        return 1, "Hmmm... It doesn't seem like this is from AllRecipes\n \
-            Please try typing it again or if you need inspo check here https://www.allrecipes.com/ \n"
-    if (urlList[1] != "recipe"):
-        return 1, "This doesn't appear to be a valid recipe from AllRecipes\n \
-            The url should follow the format: https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/"
-    if not urlList[2].isnumeric():
-        return 1, "The recipe ID should consist only of digits.\n \
-            The url should follow the format: https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/"
+    if len(address) < 4:
+        return 1, "Invalid URL"
+    if address[0] != "www.allrecipes.com":
+        return 1, "Invalid URL"
+    if address[1] != "recipe":
+        return 1, "Invalid URL"
+    if not address[2].isnumeric():
+        return 1, "Invalid URL"
+    
     #valid url!
-    return 0, urlList[3]
+    recipe_name = " ".join([word.capitalize() for word in address[3].split("-")])
+    return 0, recipe_name
 
 
     

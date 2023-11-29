@@ -40,16 +40,7 @@ if prompt := st.chat_input(""):
 
     #Check validity of recipes
 
-    while True:
-        code, message = parser_1.check_url(prompt)
-        match code:
-            case 0:
-                #display the title of the recipe
-                break
-            case 1:
-                #error message for invalid url
     
-    soup = parser_1.read_recipe_from_url(prompt)
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
