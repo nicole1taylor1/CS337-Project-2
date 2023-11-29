@@ -2,6 +2,12 @@
 
 Our cooking helper will use recipes from http://allrecipes.com/
 
+To use it
+'''
+pip install -r requirements.txt
+streamlit run app.py
+'''
+
 todo 
 - fix repeating decimals 
 
