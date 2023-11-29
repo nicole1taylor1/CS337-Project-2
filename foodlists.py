@@ -176,6 +176,28 @@ hypenatedSuffixes = ['coated', 'free', 'flavored']
 
 unit_qualifiers = ["or to taste", "or as needed"]
 
+# list of cooking utensils and methods
+utensils = [
+    'juicer', 'pan', 'mold', 'brush', 'nail', 'tamper', 'tenderizer', 'tips', 'paddle', 'baller', 'stone', 'smoother',
+    'roller', 'blender', 'knife', 'sheet', 'ladle', 'spinner', 'shears', 'whisk', 'basket', 'cooker', 'maker', 'shaver',
+    'lame', 'peeler', 'deveiner', 'scoop', 'grater', 'masher', 'docker', 'poacher', 'cloche', 'comb', 'slicer', 'spoon',
+    'toaster', 'dish', 'processor', 'marie', 'kit', 'machine', 'scissors', 'rotisserie', 'coupler', 'beans', 'scraper',
+    'press', 'pot', 'corkscrew', 'mister', 'torch', 'oven', 'injector', 'cracker', 'cup', 'spatula', 'ricer', 'microwave',
+    'bowl', 'tin', 'mat', 'timer', 'steamer', 'opener', 'peel', 'pin', 'server', 'corer', 'measure', 'infuser', 'turntable',
+    'boiler', 'tray', 'board', 'mitt', 'bag', 'chopper', 'tester', 'sieve', 'rack', 'colander', 'spiralizer', 'grill', 'mixer',
+    'mill', 'wheel', 'grinder', 'strainer', 'thermometer', 'leveler', 'cutter', 'tongs', 'sifter', 'scale']
+
+actions = [
+    'deseed', 'roll', 'wrap', 'segment', 'pound', 'dry', 'cool', 'sift', 'ground', 'tie', 'stem', 'zest',
+    'seed', 'season', 'cream', 'skin', 'marinate', 'refrigerate', 'devein', 'boil', 'beat', 'brew', 'dice',
+    'sliver', 'brown', 'peel', 'heat', 'shred', 'pat', 'soak', 'cook', 'separate', 'dissolve', 'quarter', 'stir',
+    'drain', 'scald', 'shuck', 'split', 'mince', 'cut', 'toast', 'scrub', 'cube', 'tear', 'blanch', 'puree',
+    'thaw', 'rinse', 'grill', 'bread', 'prepare', 'crush', 'halve', 'pop', 'melt', 'julienne', 'juice', 'stew',
+    'break', 'debone', 'slice', 'bake', 'trim', 'soften', 'flake', 'chop', 'bone', 'pit', 'shell', 'core', 'gut',
+    'crumble', 'grate', 'wedge', 'roast', 'press', 'mash', 'chill', 'divide', 'open', 'clean', 'squeeze', 'strain',
+    'add', 'mix', 'combine'
+    ]
+
 #units dictionary (our own)
 units = {"teaspoon": ["t", "tsp"],
 "tablespoon": ["T", "tbl", "tbs", "tbsp"],

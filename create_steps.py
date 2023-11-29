@@ -1,5 +1,6 @@
 import re
 import spacy
+from foodlists import utensils, actions
 
 nlp = spacy.load("en_core_web_lg")
 
@@ -13,7 +14,8 @@ def find_steps(soup, ingredient_objects):
     def find_time(text):
         #find the time mentioned for in the step
         time = []
-        time_match = re.findall(r'(\d+\s+to\s+\d+|\d+)\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)(\s+and\s+\d+\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?))?', text)
+        time_pat = r'\b(\w+)\b\s+(\d+\s+to\s+\d+|\d+)\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)\s*(and\s+\d+)?\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)?'
+        time_match = re.findall(time_pat, text)
         if time_match:
             for t in time_match:
                 time.append(' '.join(filter(None, t)))
@@ -34,37 +36,54 @@ def find_steps(soup, ingredient_objects):
             for token in sent:
                 #check if token is a verb
                 if token.pos_ == 'VERB':
-                    #check if it's the first token in a sentence 
-                    if token.i == sent.start:
-                        methods.append(token.lemma_)
+                    methods.append(token.lemma_) 
+                    # if token.i == sent.start:
+                    #     methods.append(token.lemma_)
                 
-                    #check if itcomes after punctuation or 'and'
-                    else:
-                        prev_token = token.nbor(-1)
-                        if prev_token.is_punct or (prev_token.text.lower() == 'and'):
-                            methods.append(token.lemma_)
-        return methods
+                    # #check if itcomes after punctuation or 'and'
+                    # else:
+                    #     prev_token = token.nbor(-1)
+                    #     if prev_token.is_punct or (prev_token.text.lower() == 'and'):
+                    #         methods.append(token.lemma_)
+        #check if any of the methods are actually cooking actions
+        final_methods = []
+        for method in methods:
+            for word in method.split():
+                if word.lower() in actions:
+                    final_methods.append(method)
+                    break
+        return set(final_methods)
     def find_method_asc(tools, step_ingr, time, temp):
         method_associations = {}
 
         for method in methods:
             method_associations[method] = {'ingredients': [], 'tools': [], 'time': [], 'temp': []}
             for sent in doc.sents:
-                if method in sent.lemma_:
-                    associated_tools = [tool for tool in tools if tool in sent.text]
-                    associated_ingredients = []
-                    for ingred in step_ingr:
-                        words = ingred.split()
-                        for word in words:
-                            if word in sent.text:
-                                associated_ingredients.append(ingred)
+                lemma = sent.lemma_.split(',')
+                broken_sent = sent.text.split(',')
+                for i, s in enumerate(lemma):
+                    if method in s:
+                        associated_tools = []
+                        for tool in tools:
+                            if any(t in sent.text for t in tool.split()):
+                                associated_tools.append(tool)
+                        associated_ingredients = []
+                        for ingred in step_ingr:
+                            words = ingred.split()
+                            for word in words:
+                                if word in sent.text:
+                                    associated_ingredients.append(ingred)
+                                    break
+                        text = broken_sent[i]
+                        for t in sorted(time, key=len, reverse=True):
+                            if t in text:
+                                method_associations[method]['time'].extend([t])
                                 break
+                        for t in temp:
+                            if t in text:
+                                method_associations[method]['temp'].extend([t])
             method_associations[method]['tools'].extend(associated_tools)
             method_associations[method]['ingredients'].extend(associated_ingredients)
-            if any(t in sent.text for t in time):
-                method_associations[method]['time'].extend([t for t in time if t in sent.text])
-            if any(t in sent.text for t in temp):
-                method_associations[method]['temp'].extend([t for t in temp if t in sent.text])      
         return method_associations
 
     def find_ingr(ingredient_objects):
@@ -83,7 +102,7 @@ def find_steps(soup, ingredient_objects):
         #extract compound nouns for full tool names
         for chunk in doc.noun_chunks:
             tokens = chunk.text.split()
-            if len(tokens) > 1 and tokens[0].lower() in ['a', 'an']:
+            if len(tokens) > 1 and tokens[0].lower() in ['a', 'an', 'the']:
                 #check if the last word is a noun
                 if nlp(chunk.text)[-1].pos_ == 'NOUN':
                     tools.append(chunk.text)
@@ -93,10 +112,15 @@ def find_steps(soup, ingredient_objects):
                     tools.append(chunk.text)
                 elif chunk.root.pos_ == 'NOUN':
                     tools.append(chunk.text)
-        #remove tools are ingredients, do not end in a noun and do not start with "a" or "an":
-        # tools = [tool for tool in tools if all(ingr not in tool for ingr in ingredient_objects)]
-        tools = [tool for tool in tools if nlp(tool)[-1].pos_ == 'NOUN' and tool.split()[0] in ["a", "an"]]
-        return tools
+        #remove tools are not tools, do not end in a noun and do not start with "a" or "an":
+        tools = [tool for tool in tools if nlp(tool)[-1].pos_ == 'NOUN' and tool.split()[0] in ["a", "an", "the"]]
+        final_tools = []
+        for tool in tools:
+            for words in tool.split():
+                if words in utensils:
+                    final_tools.append(tool)
+                    break
+        return final_tools
 
     def find_tool_asc(tools, step_ingr, methods):
         tool_associations = {}  
