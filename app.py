@@ -80,6 +80,7 @@ if url:
         response = f":gray[{recipename} ... {random_response}]"
         st.write(response)
 
+st.divider()
 
 ##########################CHAT#################################
 ###############################################################
