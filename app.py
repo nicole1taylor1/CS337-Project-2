@@ -15,14 +15,13 @@ def assistant_respond(assistant_response):
         full_response = ""
         
         #handle new lines
-        if "\n" in assistant_response:
+        chars = assistant_response.split()
+        if "  \n\n" in assistant_response:
             chars = []
-            chunks = assistant_response.split("\n")
+            chunks = assistant_response.split("\n\n")
             for chunk in chunks:
                 chars += chunk.split()
-                chars.append("  \n")
-        else:
-            chars = assistant_response.split()
+                chars.append("  \n\n")
 
         # Simulate stream of response with milliseconds delay
         for chunk in chars:
@@ -59,8 +58,10 @@ with st.sidebar:
     Within the chat, you can ask me to list ingredients or walk through the recipe. If you need to go back a step or to remind you the details of an ingredients just ask!            
     
     ### Help
-    Here go any additional how to use me details   
-
+    •  Use they keywords **ingredient** & **list** in your query to view the list of ingredients
+                
+    •  Want more or less? Ask me to **change the serving size**, then you'll be prompted to specify by what amount
+                
     ### Features         
     '''
     )
@@ -116,5 +117,10 @@ if soup:
         #option 1: List Ingredients
         input = prompt.lower()
         if "list" in input and "ingredient" in input:
-            response = "\n".join([str(ingedient) for ingedient in ingredients])
+            lead_in = "Ok, if I'm understanding correctly you'd like to see the list of ingredients.  \n Here they are:  \n\n"
+            response = lead_in + "\n\n".join([str(ingedient) for ingedient in ingredients])
             assistant_respond(response)
+        
+        #option 2: Change serving size of recipe
+        if "change" in input and "serving" in input and "size" in input:
+            #prompt user for serving size change

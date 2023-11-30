@@ -144,6 +144,11 @@ def get_ingredients_from_soup(soup):
         ingredientsList.append(ingredient)
     return ingredientsList
 
+def change_recipe_serving_size(ingedients, change):
+    for i in ingedients:
+        i.change_serving_size(change)
+    return ingedients
+
 
 #run program
 """soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
