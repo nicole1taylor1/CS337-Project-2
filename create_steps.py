@@ -24,7 +24,7 @@ def find_steps(soup, ingredient_objects):
     def find_temp(text):
         #find the temperature for that step
         temp = []
-        temp_match = re.findall(r'(\d+ degrees (C|F))', text)
+        temp_match = re.findall(r'(\d+ degrees (C|F|celsius|fahrenheit))', text, re.IGNORECASE)
         if temp_match:
             for t in temp_match:
                 temp.append(t[0])
@@ -158,3 +158,118 @@ def find_steps(soup, ingredient_objects):
         #add Step object to Steps collection
         steps_collection.add_step(step_obj)
     return steps_collection
+
+# Steps class: This class is a collection of Step objects.
+
+# Step class: This class is a single step in a recipe. It has these attributes:
+
+#               ingredients: This is a list of ingredients used in this step.
+#                     (Example: ['flour', 'brown sugar', 'butter', 'vanilla extract', 'salt', 'milk', 'milk chocolate chips', 
+#                                 'chocolate chips'] )
+
+#               tools: This is a list of tools used in this step, along with the associations.
+#                     (Example: {'an oven':                     // 1 of the tools mentioned in the step 
+#                                 {'methods': ['toast'],        // What methods this tool is used in
+#                                 'ingredients': ['flour']}}    // What this tool is used on.)
+
+#               methods: This is a list of cooking methods used in this step, along with the associations.
+#                     (Example: {'toast':                                       // 1 of the methods mentioned in the step
+#                                 {'ingredients': ['flour'],                    // ingredients associated with this method
+#                                 'tools': ['a microwave', 'a baking sheet',
+#                                            'an oven'],                        // tools associated with this method
+#                                 'time': ['for 5 to 6 minutes'],               // time associated with this method (for the oven)
+#                                 'temp': ['350 degrees F']}}                   // temp associated with this method (for the oven))
+
+#               description: This is the text description of the step.
+#                     (Example: See below)
+
+#               time: This is a list of times mentioned in this step. (Used to create associations)
+#                     (Example: [for 10 minutes, every 20 sec], if the step mentions "use tool for 10 minutes" and asks 
+#                                 "to stir every 20 sec")
+
+#               temp: This is the list of temperatures mentioned in this step. (Used to create associations)
+#                     (Example: [190 Degrees celsius, 375 degrees F] if the step mentions "Preheat oven to 190 degrees C 
+#                                 or 375 degrees F")
+
+# Ingredients, Methods and Tools will probably be the most useful attr. to use in the front-end
+
+# Example Steps Class:
+
+# Step 1: Step(Ingredients: ['flour'], 
+#             Tools: {'a microwave-safe dish': 
+#                         {'methods': ['cook', 'stir'], 
+#                         'ingredients': ['flour']}}, 
+#             Methods: {'cook': 
+#                         {'ingredients': ['flour'], 
+#                         'tools': ['a microwave-safe dish'], 
+#                         'time': ['for 1 minute and 15 seconds'], 
+#                         'temp': []}, 
+#                     'stir': 
+#                         {'ingredients': ['flour'], 
+#                         'tools': ['a microwave-safe dish'], 
+#                         'time': ['every 15 seconds'], 
+#                         'temp': []}}, 
+#             Time: ['for 1 minute and 15 seconds', 'every 15 seconds'], 
+#             Temp: [], 
+#             Description: 'To heat-treat your flour so it is safe to use: Place flour in a microwave-safe dish and cook 
+#             for 1 minute and 15 seconds, stirring it every 15 seconds. Set aside.')
+
+# Step 2: Step(Ingredients: ['flour', 'brown sugar', 'butter', 'vanilla extract', 'salt', 'milk', 'milk chocolate chips', 
+#                             'chocolate chips'], 
+#             Tools: {'an electric mixer': 
+#                         {'methods': ['Beat', 'mix'], 
+#                         'ingredients': ['brown sugar', 'butter']}, 
+#                     'a large bowl': 
+#                         {'methods': ['Beat', 'mix'], 
+#                         'ingredients': ['brown sugar', 'butter']}}, 
+#             Methods: {'stir': 
+#                         {'ingredients': ['milk', 'milk chocolate chips', 'chocolate chips'], 
+#                         'tools': ['an electric mixer', 'a large bowl'], 
+#                         'time': [], 
+#                         'temp': []}, 
+#                     'combine': 
+#                         {'ingredients': ['milk', 'milk chocolate chips', 'chocolate chips'], 
+#                         'tools': ['an electric mixer', 'a large bowl'], 
+#                         'time': [], 
+#                         'temp': []}, 
+#                     'Beat': 
+#                         {'ingredients': ['vanilla extract', 'salt'], 
+#                         'tools': ['an electric mixer', 'a large bowl'], 
+#                         'time': [], 
+#                         'temp': []}, 
+#                     'add': 
+#                         {'ingredients': ['flour'], 
+#                         'tools': ['a large bowl'], 
+#                         'time': [], 
+#                         'temp': []}, 
+#                     'mix': 
+#                         {'ingredients': ['flour'], 
+#                         'tools': ['a large bowl'], 
+#                         'time': [], 
+#                         'temp': []}}, 
+#             Time: [], 
+#             Temp: [], 
+#             Description: 'Beat sugar and butter with an electric mixer in a large bowl until creamy. Beat in vanilla extract 
+#                 and salt. Add heat-treated flour; mix until a crumbly dough forms. Stir in milk until dough is just combined; 
+#                 fold in milk chocolate chips and mini chocolate chips.')
+
+# Step 3: Step(Ingredients: ['flour'], 
+#             Tools: {'a microwave': 
+#                         {'methods': ['toast'], 
+#                         'ingredients': ['flour']}, 
+#                     'a baking sheet': 
+#                         {'methods': ['toast'], 
+#                         'ingredients': ['flour']}, 
+#                     'an oven': 
+#                         {'methods': ['toast'], 
+#                         'ingredients': ['flour']}}, 
+#             Methods: {'toast': 
+#                         {'ingredients': ['flour'], 
+#                         'tools': ['a microwave', 'a baking sheet', 'an oven'], 
+#                         'time': ['for 5 to 6 minutes'], 
+#                         'temp': ['350 degrees F']}}, 
+#             Time: ['for 5 to 6 minutes'], 
+#             Temp: ['350 degrees F'], 
+#             Description: 'There is a potential risk of foodborne illness from the consumption of raw flour. Follow Step 1 to 
+#                             heat-treat your flour so it is safe to use. If you do not have a microwave, spread flour out on a 
+#                             baking sheet and toast in an oven at 350 degrees F for 5 to 6 minutes.')
