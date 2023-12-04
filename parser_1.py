@@ -4,6 +4,7 @@ import unicodedata
 from ourtypes.ingredient import Ingredient
 import foodlists
 import re
+from ourtypes.recipe import Recipe
 
 def check_url(url):
     """Checks validity of recipe given by user
@@ -149,6 +150,49 @@ def change_recipe_serving_size(ingedients, change):
         i.change_serving_size(change)
     return ingedients
 
+def get_general_recipe_details(soup):
+    #get servings, prep time, total time
+    div_class_id = "recipe-details_1-0"
+    info = soup.find("div", {"id":div_class_id})
+    info = info.find_next().findChildren()
+    nutritional_info = {}
+    for child in info:
+        text = child.text.split("\n")
+        if len(text) == 4:
+            key = text[1].replace(":", "")
+            val = text[2]
+            nutritional_info[key] = val
+    #get nutritional facts
+    div_class_id2 = "mntl-nutrition-facts-summary_1-0"
+    info = soup.find("div", {"id":div_class_id2})
+    info = info.findChildren()
+    for child in info:
+        text = child.text.split("\n")
+        if len(text) == 4:
+            key = text[1].replace(":", "")
+            val = text[2]
+            nutritional_info[val] = key
+    return nutritional_info
+
+def get_title(soup):
+    #get title
+    h1_id="article-heading_1-0"
+    info = soup.find("h1", {"id":h1_id})
+    title = info.text.strip()
+
+    return title
+
+    
+def make_recipe(soup):
+    title = get_title(soup)
+    nutritional_info = get_general_recipe_details(soup)
+    ingredients = get_ingredients_from_soup(soup)
+    recipe = Recipe(title, info=nutritional_info)
+    recipe.add_ingredients(ingredients=ingredients)
+    return recipe
+
+
+
 
 #run program
 """soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
@@ -157,3 +201,4 @@ for i in ingredients:
     print(i)
     print(i.tags)
     print("\n\n")"""
+

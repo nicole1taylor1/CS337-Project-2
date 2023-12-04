@@ -12,24 +12,17 @@ todo
 - fix repeating decimals 
 
 frontend
-- give potential top recipes (cache these?)
-- help them find a recipe?
-- questions about cook time/prep time/nutrional info
 
 streamlit lets you display videos!! (questions)
 
-TODO NEXT
-- enable ingredient list feature
 
 CHATBOT INPUTS
 #option 2: Go over recipe 
-
-    #option 3: question about ingredient
 
     #option 4: question about step 
 
     #option 5: backward/forward navigation
 
-    #farenheit vs. celsuis 
-    #converting units
-    #doubling recipes, etc. 
+#ADD IN DEMO VIDEO
+#INDIVIDUAL INGREDIENTS
+#STEPPING THROUGH RECIPE
