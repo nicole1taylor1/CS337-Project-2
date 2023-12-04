@@ -69,7 +69,7 @@ def find_steps(soup, ingredient_objects):
                                 associated_tools.append(tool)
                         associated_ingredients = []
                         for ingred in step_ingr:
-                            words = ingred.split()
+                            words = ingred.ingredient_name.split()
                             for word in words:
                                 if word in sent.text:
                                     associated_ingredients.append(ingred)
@@ -90,7 +90,7 @@ def find_steps(soup, ingredient_objects):
         #identify ingredients present in this step
         step_ingredients = []
         for ingred in ingredient_objects:
-            words = ingred.split()
+            words = ingred.ingredient_name.split()
             for word in words:
                 if word in step_text:
                     step_ingredients.append(ingred)
@@ -131,7 +131,7 @@ def find_steps(soup, ingredient_objects):
                     associated_methods = [method for method in methods if method in sent.lemma_]
                     associated_ingredients = []
                     for ingred in step_ingr:
-                        words = ingred.split()
+                        words = ingred.ingredient_name.split()
                         for word in words:
                             if word in sent.text:
                                 associated_ingredients.append(ingred)

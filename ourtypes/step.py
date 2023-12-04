@@ -1,3 +1,12 @@
+"""
+How it should print out:
+Step #1
+Ingredients: ingredients objects
+tools: list of str
+methods: list of methods
+description = description of step
+time, temp 
+"""
 
 class Step:
     """
@@ -19,6 +28,13 @@ class Step:
 
     def __repr__(self):
             return f"Step(Ingredients: {self.ingredients}, Tools: {self.tools}, Methods: {self.methods}, Time: {self.time}, Temp: {self.temp}, Description: '{self.description}')"
+    
+    """def __str__(self):
+        ingredients = "**Ingredients required for this step:**  \n" + "\n".join([str(ingedient) for ingedient in self.ingredients])
+        tools = f"**Tools required for this step:  \n" + "\n".join([("•  " + str(tool) for tool in tools)])
+        methods = f"**Methods required for this step:  \n" + "\n".join([("•  " + str(tool) for tool in tools)])"""
+
+    
 
 class Steps:
     """

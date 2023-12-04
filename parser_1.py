@@ -190,17 +190,7 @@ def make_recipe(soup):
     ingredients = get_ingredients_from_soup(soup)
     recipe = Recipe(title, info=nutritional_info)
     recipe.add_ingredients(ingredients=ingredients)
+    steps = find_steps(soup, ingredient_objects=ingredients)
+    recipe.add_steps(steps=steps)
     return recipe
-
-
-
-
-#run program
-"""soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
-ingredients = get_ingredients_from_soup(soup)
-steps = find_steps(soup, [ingredient.ingredient_name for ingredient in ingredients])
-for i in ingredients:
-    print(i)
-    print(i.tags)
-    print("\n\n")"""
 
