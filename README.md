@@ -24,16 +24,3 @@ We have 4 data types found in the folder ourtypes
     - temp: A list of temperatures used in this step. (Used to create associations)
 - Steps is a class containing all steps of a recipe
 
-
-streamlit lets you display videos!! (questions)
-
-CHATBOT INPUTS
-#option 2: Go over recipe 
-
-    #option 4: question about step 
-
-    #option 5: backward/forward navigation
-
-#ADD IN DEMO VIDEO
-#INDIVIDUAL INGREDIENTS
-#STEPPING THROUGH RECIPE
