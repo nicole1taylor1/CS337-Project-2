@@ -58,9 +58,14 @@ with st.sidebar:
                 
     Once you know which recipe you'd like to try, paste the link in the corresponding field. If the URL is valid, the chat feature will pop up.  
                 
-    Within the chat, you can ask me to list ingredients or walk through the recipe. If you need to go back a step or to remind you the details of an ingredients just ask!            
-    
     ### Help  
+    To **walk through the recipe**:  
+    •  :grey[_Ask me to **step through recipe** in your query_]  
+    •  :grey[_I will read you one step at a time_]  
+    •  :grey[_To see the next step, type **next step**_]  
+    •  :grey[_To see the previous step, type **previous step**_]  
+    •  :grey[_To see a specific step, type **step number 1, step number 2**, etc._]  
+                 
                 
     To see the list of **ingredients**:  
     •  :grey[_Use they keywords **ingredient** & **list** in your query_]
@@ -130,6 +135,8 @@ if soup:
         with st.chat_message("user"):
             st.markdown(prompt)
 
+        responded = False
+
         #NEED LOGIC HERE FOR UNDERSTAND USER QUESTIONS AND COMMANDS!!!
 
         #HANDLING FOLLOW UP QUESTIONS FIRST
@@ -150,6 +157,7 @@ if soup:
                         response = "{amount} is not a valid number to change the recipe by.\n\n Please try again."
                     d = assistant_respond(response)
                     st.session_state.messages.append(d)
+                    responded = True
 
         #option 1: List Ingredients
         input = prompt.lower()
@@ -158,6 +166,7 @@ if soup:
             response = lead_in + "\n\n".join([str(ingedient) for ingedient in recipe.ingredients])
             d = assistant_respond(response)
             st.session_state.messages.append(d)
+            responded = True
         
         #option 2: Change serving size of recipe
         if "change" in input and "serving" in input and "size" in input:
@@ -165,6 +174,42 @@ if soup:
             #prompt user for serving size change
             d = assistant_respond(response)
             st.session_state.messages.append(d)
+            responded = True
+
+        #option 3: step through recipe
+        if "step" in input and "through" in input and "recipe" in input:
+            response = f"Ok, you'd like me to walk you through the steps for {recipe.name}...  \n\n"
+            step1 = recipe.print_step()
+            response += step1
+            #prompt user for serving size change
+            d = assistant_respond(response)
+            st.session_state.messages.append(d)
+            responded = True
+
+        if "next step" in input:
+            step = recipe.print_step("Next")
+            d = assistant_respond(step)
+            st.session_state.messages.append(d)
+            responded = True
+        
+        if "previous step" in input:
+            step = recipe.print_step("Previous")
+            d = assistant_respond(step)
+            st.session_state.messages.append(d)
+            responded = True
+        
+        if "step #" in input or "step number" in input:
+            num = input[-1]
+            if num.isnumeric():
+                step = recipe.print_step(int(num))
+                d = assistant_respond(step)
+                st.session_state.messages.append(d)
+                responded = True
+            else:
+                response = f"{num} is not a valid step.  \n\n Please try again."
+                d = assistant_respond(response)
+                st.session_state.messages.append(d)
+                responded = True
 
         #option 5: Ask for nutritional info
         if "nutritional info" in input:
@@ -172,6 +217,7 @@ if soup:
             response = lead_in + recipe.print_nutritional_facts()
             d = assistant_respond(response)
             st.session_state.messages.append(d)
+            responded = True
 
         #Indiviaul nutritional info
         inputs = prompt.split(" ")
@@ -188,6 +234,7 @@ if soup:
                     response = f"Ok, you'd like to see the {i} content.  \n\n {title} has {fact} {i}."
                 d = assistant_respond(response)
                 st.session_state.messages.append(d)
+                responded = True
 
         #Asking for preptime, total time, servings
         query = " ".join([ele.capitalize() for ele in inputs])
@@ -205,9 +252,12 @@ if soup:
                         response = f"Ok, you'd like to know about how long the {i.lower()} will take.  \n\n The recipe for {title} will require **{fact}** for **{i.lower()}**."
                 d = assistant_respond(response)
                 st.session_state.messages.append(d)
+                responded = True
 
-        #option 3: Ask to step through the recipe
-        #commands like next step, previous step, holding position of step in a variable 
-
-        #option 4: Question like how to chop onions etc. 
+        #NO RESPONSE
+        if not responded:
+            response = "I'm sorry, but I don't understand your message. \n\n See the help section to the left if you need. \n\n Please try again."
+            d = assistant_respond(response)
+            st.session_state.messages.append(d)
+            responded = True
         
