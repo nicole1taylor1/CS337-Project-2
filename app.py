@@ -58,7 +58,7 @@ with st.sidebar:
                 
     Once you know which recipe you'd like to try, paste the link in the corresponding field. If the URL is valid, the chat feature will pop up.  
                 
-    ### Help  
+    ### How To  
     To **walk through the recipe**:  
     •  :grey[_Ask me to **step through recipe** in your query_]  
     •  :grey[_I will read you one step at a time_]  
@@ -79,15 +79,19 @@ with st.sidebar:
                 
     To change the **number of servings**:   
     •  :grey[_Ask me to **change the serving size**, then you'll be prompted to specify by what amount_]    
-                
-      
-    ### Features         
+                        
     '''
     )
     st.caption("Developed by Alfonso Napoles and Nicole Taylor for CS337 @ Northwestern")
 
 ##########################GET RECIPE URL#######################
 ###############################################################
+@st.cache_data
+def get_recipe(url):
+    exitcode2, soup = parser_1.read_recipe_from_url(url)
+    recipe = parser_1.make_recipe(soup)
+    return recipe
+
 #get URL for recipe
 soup = None
 url = st.text_input(label=":gray[Please type URL below]")
@@ -112,12 +116,17 @@ if url:
 
 st.divider()
 
+def get_last_step(messages):
+    me = [ele["content"] for ele in messages if ele["role"] == "assistant" and "Step #" in ele["content"]]
+    if me:
+        last_step = me[-1][8]
+        if str(last_step).isnumeric():
+            return int(last_step)
+    return 1
 ##########################CHAT#################################
 ###############################################################
 if soup:
-    #get ingredients from recipe link
-    recipe = parser_1.make_recipe(soup) 
-
+    recipe = get_recipe(url)
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -145,12 +154,13 @@ if soup:
             if last_response["role"] == "assistant":
                 content = last_response["content"]
                 #CHANGE SERVING SIZE
-                if content == 'Ok, it seems like you want to change the amount of servings... By how much?   \n\n _Type 2 to double it, Type 1/2 to cut it in half_   \n\n ':
+                if content == 'Ok, it seems like you want to change the amount of servings... By how much?   \n\n _Type 2 to double it, Type 0.5 to cut it in half_   \n\n ':
                 #the last user response should be the amount they want to change it by 
                     user_response = prompt.strip()
-                    if user_response.isnumeric():
+                    u = user_response.replace(".", "")
+                    if u.isnumeric():
                         amount = float(user_response)
-                        lead_in = f"Ok, you want to make {int(amount)}x the recipe for {recipe.name}  \n\n ... \n\n"
+                        lead_in = f"Ok, you want to make {float(amount)}x the recipe for {recipe.name}  \n\n ... \n\n"
                         m = recipe.change_serving_size(amount)
                         response = lead_in + m + "Here's the new ingredient list. \n\n" +  "\n\n".join([str(ingedient) for ingedient in recipe.ingredients])
                     else:
@@ -170,7 +180,7 @@ if soup:
         
         #option 2: Change serving size of recipe
         if "change" in input and "serving" in input and "size" in input:
-            response = "Ok, it seems like you want to change the amount of servings...  \n  By how much?  \n\n  _Type 2 to double it, Type 1/2 to cut it in half_"
+            response = "Ok, it seems like you want to change the amount of servings...  \n  By how much?  \n\n  _Type 2 to double it, Type 0.5 to cut it in half_"
             #prompt user for serving size change
             d = assistant_respond(response)
             st.session_state.messages.append(d)
@@ -187,19 +197,25 @@ if soup:
             responded = True
 
         if "next step" in input:
-            step = recipe.print_step("Next")
-            d = assistant_respond(step)
+            step = get_last_step(st.session_state.messages)
+            step += 1
+            recipe.next_step()
+            stepN = recipe.print_step(step)
+            d = assistant_respond(stepN)
             st.session_state.messages.append(d)
             responded = True
         
         if "previous step" in input:
-            step = recipe.print_step("Previous")
-            d = assistant_respond(step)
+            step = get_last_step(st.session_state.messages)
+            step += - 1
+            recipe.previous_step()
+            stepN = recipe.print_step(step)
+            d = assistant_respond(stepN)
             st.session_state.messages.append(d)
             responded = True
         
         if "step #" in input or "step number" in input:
-            num = input[-1]
+            num = str(input[-1])
             if num.isnumeric():
                 step = recipe.print_step(int(num))
                 d = assistant_respond(step)
@@ -213,7 +229,7 @@ if soup:
 
         #option 5: Ask for nutritional info
         if "nutritional info" in input:
-            lead_in = "Ok, you'd like to see the full nutritional info for {recipe.name}.  \n Here it is:  \n\n"
+            lead_in = f"Ok, you'd like to see the full nutritional info for {recipe.name}.  \n Here it is:  \n\n"
             response = lead_in + recipe.print_nutritional_facts()
             d = assistant_respond(response)
             st.session_state.messages.append(d)

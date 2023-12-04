@@ -30,7 +30,7 @@ class Step:
             return f"Step(Ingredients: {self.ingredients}, Tools: {self.tools}, Methods: {self.methods}, Time: {self.time}, Temp: {self.temp}, Description: '{self.description}')"
     
     def print_desc(self, stepnum):
-        ingredients = f"**Ingredients** required for **Step #{stepnum}:**  \n\n" + "  \n\n".join([str(ingedient) for ingedient in self.ingredients])
+        ingredients = f"**Ingredients** required for **Step #{stepnum + 1}:**  \n\n" + "  \n\n".join([str(ingedient) for ingedient in self.ingredients])
         return self.description + "  \n\n" + ingredients
     
     """def __str__(self):
@@ -61,7 +61,6 @@ class Steps:
         self.steps.append(step)
 
     def get_step(self, index):
-        index = index 
         if index <= len(self.steps):
             return self.steps[index]
         else:

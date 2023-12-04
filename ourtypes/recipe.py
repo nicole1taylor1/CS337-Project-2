@@ -71,23 +71,29 @@ class Recipe:
         self.nutritional_info["Servings"] = new_servings
         return f"The recipe {self.name} has been adjusted by {amount} so that instead of making {original_servings} it will produce **{new_servings} servings**. \n\n"
     
+    def next_step(self):
+        self.curr_step = self.curr_step + 1
+
+    def previous_step(self):
+        if self.curr_step > len(self.steps):
+            self.curr_step = self.curr_step - 1
     
     def print_step(self, step=None):
         if step != None:
-            if step == "Next":
-                self.curr_step += 1
-            elif step == "Previous":
-                self.curr_step += -1
-            elif step.isnumeric():
-                stepdescription = self.steps.get_step(int(step)).print_desc(self.curr_step)
-                return f"**Step #{self.curr_step + 1}**  \n\n {stepdescription}"
-            if self.curr_step > len(self.steps):
+            if isinstance(step, int):
+                if step <= len(self.steps):
+                    stepdescription = self.steps.get_step(step - 1)
+                    return f"**Step #{step}**  \n\n {stepdescription.print_desc(step - 1)}"
+                else:
+                    return f"The recipe only has {len(self.steps)} steps."
+            
+            if self.curr_step >= len(self.steps):
                 return f"The recipe only has {len(self.steps)} steps."
             
             stepdescription = self.steps.get_step(self.curr_step).print_desc(self.curr_step)
             return f"**Step #{self.curr_step + 1}**  \n\n {stepdescription}"
         else:
-            if self.curr_step > len(self.steps):
+            if self.curr_step >= len(self.steps):
                 return f"The recipe only has {len(self.steps)} steps."
             stepdescription = self.steps.get_step(self.curr_step).print_desc(self.curr_step)
             return f"**Step #{self.curr_step + 1}**  \n\n {stepdescription}"

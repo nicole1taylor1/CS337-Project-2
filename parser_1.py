@@ -94,10 +94,18 @@ def get_ingredients_from_soup(soup):
     for child in ingredients.find_all("li"):
         text = child.text.replace("\n", "").strip()
         text = text.split(" ")
+        text = [ele for ele in text if ele != "" and "(" not in ele and ")" not in ele]
         
         #get QUANTITY
         quantity_unicode = text[0]
-        quantity = unicodedata.numeric(text[0]) #quantity = chars before first space
+        try:
+            quantity = unicodedata.numeric(text[0]) #quantity = chars before first space
+        except:
+            if isinstance(quantity_unicode,str) and quantity_unicode.isnumeric():
+                quantity = float(quantity_unicode)
+            else:
+                quantity = ""
+                
 
         #get UNIT
         unit = ""
@@ -125,6 +133,8 @@ def get_ingredients_from_soup(soup):
         #check for plurals
         #just for now
         posn += 1 
+        if posn >= len(text):
+            posn += -1
         name = text[posn:]
         map(lambda x: x.lower(), name)
 
@@ -139,6 +149,8 @@ def get_ingredients_from_soup(soup):
 
         name = " ".join(name)
         unit_qualifier, tags, name = parse_ingredient_name(name)
+        if name == "":
+            name = text[1]
 
         ingredient = Ingredient(ingredient_name=str(name), quantity=float(quantity), quantity_unicode=quantity_unicode, 
                                 unit=unit, descriptor=descriptors, preparation=preparation,
