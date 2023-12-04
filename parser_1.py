@@ -5,6 +5,7 @@ from ourtypes.ingredient import Ingredient
 import foodlists
 import re
 from ourtypes.recipe import Recipe
+from create_steps import find_steps
 
 def check_url(url):
     """Checks validity of recipe given by user
@@ -197,6 +198,7 @@ def make_recipe(soup):
 #run program
 """soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
 ingredients = get_ingredients_from_soup(soup)
+steps = find_steps(soup, [ingredient.ingredient_name for ingredient in ingredients])
 for i in ingredients:
     print(i)
     print(i.tags)
