@@ -20,7 +20,7 @@ class Ingredient:
         
         #set fields
         self.ingredient_name = ingredient_name
-        self.quantity = quantity
+        self.quantity = float(quantity)
         self.unit = unit
         self.quantity_unicode = quantity_unicode
         self.description = descriptor
@@ -61,17 +61,19 @@ class Ingredient:
             case _:
                 return f"{prep}{', '.join(self.description)} {self.ingredient_name}"
         
-
+    def change_serving_size(self, change):
+        self.quantity = round(self.quantity * change, 3)
+        self.quantity_unicode = str(self.quantity)
     
     def __str__(self):
         #probs need to adjust plurals
         name = self.format_ingredient_name()
         if self.quantity != 1 and self.unit[-1] != "s":
-            return f"{self.quantity_unicode} {self.unit}s of {name}{self.unit_qualifier}\n"
+            return f"•  {self.quantity_unicode} {self.unit}s of {name}{self.unit_qualifier}"
         elif self.unit != None:
-            return f"{self.quantity_unicode} {self.unit} of {name}{self.unit_qualifier}\n"
+            return f"•  {self.quantity_unicode} {self.unit} of {name}{self.unit_qualifier}"
         else:
-            return f"{self.quantity_unicode} {name}{self.unit_qualifier}\n"
+            return f"•  {self.quantity_unicode} {name}{self.unit_qualifier}"
 
 
         

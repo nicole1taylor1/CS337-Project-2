@@ -3,21 +3,54 @@ import requests
 import unicodedata
 from ourtypes.ingredient import Ingredient
 import foodlists
+import re
+from ourtypes.recipe import Recipe
 from create_steps import find_steps
 
-"""
-Common keywords useful for parsing
-"""
+def check_url(url):
+    """Checks validity of recipe given by user
+    recipe should look like
+    https://www.allrecipes.com/recipe/{recipe ID}/{recipe name}/
+    """
+    urlList = url.split("//")
+    if urlList[0] != "https:":
+        return 1, ""
+    
+    #check for valid all recipe
+    address = urlList[1].split("/")
+    if len(address) < 4:
+        return 1, ""
+    if address[0] != "www.allrecipes.com":
+        return 1, ""
+    if address[1] != "recipe":
+        return 1, ""
+    if not address[2].isnumeric():
+        return 1, ""
+    
+    #valid url!
+    recipe_name = " ".join([word.capitalize() for word in address[3].split("-")])
+    return 0, recipe_name
 
+def check_page_found(soup):
+    found = soup.find("div", {"id":"not-found-content_1-0"})
+    if found:
+        return 1
+    return 0
 
 def read_recipe_from_url(url):
     """Will read a recipe from url using requests
     returns bs4 soup object
     """
-
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, "html.parser")
-    return soup
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, "html.parser")
+    except:
+        return 1, None
+    
+    exitcode = check_page_found(soup)
+    if exitcode == 1:
+        return 1, None
+    return 0, soup
 
 def PluralUnit(word):
     if word[-1] == "s":
@@ -113,12 +146,61 @@ def get_ingredients_from_soup(soup):
         ingredientsList.append(ingredient)
     return ingredientsList
 
+def change_recipe_serving_size(ingedients, change):
+    for i in ingedients:
+        i.change_serving_size(change)
+    return ingedients
+
+def get_general_recipe_details(soup):
+    #get servings, prep time, total time
+    div_class_id = "recipe-details_1-0"
+    info = soup.find("div", {"id":div_class_id})
+    info = info.find_next().findChildren()
+    nutritional_info = {}
+    for child in info:
+        text = child.text.split("\n")
+        if len(text) == 4:
+            key = text[1].replace(":", "")
+            val = text[2]
+            nutritional_info[key] = val
+    #get nutritional facts
+    div_class_id2 = "mntl-nutrition-facts-summary_1-0"
+    info = soup.find("div", {"id":div_class_id2})
+    info = info.findChildren()
+    for child in info:
+        text = child.text.split("\n")
+        if len(text) == 4:
+            key = text[1].replace(":", "")
+            val = text[2]
+            nutritional_info[val] = key
+    return nutritional_info
+
+def get_title(soup):
+    #get title
+    h1_id="article-heading_1-0"
+    info = soup.find("h1", {"id":h1_id})
+    title = info.text.strip()
+
+    return title
+
+    
+def make_recipe(soup):
+    title = get_title(soup)
+    nutritional_info = get_general_recipe_details(soup)
+    ingredients = get_ingredients_from_soup(soup)
+    recipe = Recipe(title, info=nutritional_info)
+    recipe.add_ingredients(ingredients=ingredients)
+    return recipe
+
+
+
 
 #run program
-soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
+"""soup = read_recipe_from_url("https://www.allrecipes.com/recipe/255365/edible-cookie-dough/")
 ingredients = get_ingredients_from_soup(soup)
 steps = find_steps(soup, [ingredient.ingredient_name for ingredient in ingredients])
 for i in ingredients:
     print(i)
     print(i.tags)
-    print("\n\n")
+    print("\n\n")"""
+
