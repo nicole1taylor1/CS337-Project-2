@@ -171,6 +171,7 @@ if soup:
 
         #option 1: List Ingredients
         input = prompt.lower()
+        input = input.replace("?","")
         if "list" in input and "ingredient" in input:
             lead_in = "Ok, if I'm understanding correctly you'd like to see the list of ingredients.  \n Here they are:  \n\n"
             response = lead_in + "\n\n".join([str(ingedient) for ingedient in recipe.ingredients])
@@ -236,7 +237,7 @@ if soup:
             responded = True
 
         #Indiviaul nutritional info
-        inputs = prompt.split(" ")
+        inputs = prompt.replace("?","").split(" ")
         for i in inputs:
             i = i.capitalize()
             if i in ["Fat", "Carbs", "Protein", "Calories", "Cals"]:
